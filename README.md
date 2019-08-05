@@ -9,7 +9,7 @@ For example:
 
 ## Quick Start
 ```python
-# Creates new image object.
+# Creates a new image object.
 img = tis('example.png')
 
 # Crops words from text and saves them to 'cropped_words' directory.
