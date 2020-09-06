@@ -34,26 +34,13 @@ class tis:
         None.
         Saves images of all words from the text in the output path.
     '''
-    def crop_text(self, output_dir=None, iterations=5, dilate=True):
+    def crop_text(self, output_dir, iterations=5, dilate=True):
         sharp_img = self.__sharpen_text(self.img)
         conts = self.__contours(sharp_img, iterations, dilate)
 
         if not output_dir:
-            parent_dir = os.path.dirname(self.img_path)
-            output_dir = os.path.join(
-                parent_dir, 'text_segmentation')
-
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir)
-
-            output_dir = output_dir + '\\'
-
-        elif not os.path.exists(output_dir):
-            os.makedirs(output_dir)
-            output_dir = output_dir + '\\'
-
-        elif os.path.exists(output_dir):
-            output_dir = output_dir + '\\'
+            print("Please insert output directory.")
+            return
 
         self.__crop_words(sharp_img, conts, output_dir)
 
@@ -87,55 +74,25 @@ class tis:
             
     # Clean image background and sharpen text.
     def __sharpen_text(img):
-        # Check if image is already in gray scale.
-        try:
-            imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        except:
-            imgray = img
-
-        # Blurring the image before and after threshold seems to have better
-        # results.
-        imgBlur = cv2.medianBlur(imgray, 3, 0)
-        _, imgBin = cv2.threshold(imgBlur, 0, 255, cv2.THRESH_OTSU)
-        img = cv2.blur(imgBin, (1, 1))
-
-        return img
+        thresh = cv.adaptiveThreshold(img,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            cv.THRESH_BINARY,11,2)
+        return thresh
 
     # Find contours of words in the text.
-    def __contours(img, iterations=3, dilate=True):
-        if dilate is False:
-            im = img
-        else:
-            # Dilate image for better segmentation
-            im = self.__dilate_img(img, iterations)
-
-        # Check if image is already gray.
-        try:
-            imgray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-        except:
-            imgray = im
-
-        ret, thresh = cv2.threshold(imgray, 127, 255, 0)
-        contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE,
+    def __contours(img, iterations=3):
+        # Dilate image for better segmentation
+        im = self.__dilate_img(img, iterations)
+        contours, hierarchy = cv2.findContours(im, cv2.RETR_TREE,
                                                cv2.CHAIN_APPROX_SIMPLE)
-
         return contours
 
     # Dilate image for better segmentation in contours detection.
     def __dilate_img(img, iterations):
-        # Convert image to gray.
-        # Check if image is already in gray scale.
-        try:
-            imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        except:
-            imgray = img
-
         # Clean all noises.
-        denoised = cv2.fastNlMeansDenoising(imgray, dst=None, h=10)
+        denoised = cv2.fastNlMeansDenoising(img, dst=None, h=10)
 
         # Negative the image.
         imagem = cv2.bitwise_not(denoised)
-
         kernel = np.ones((3, 3), np.uint8)
         dilate = cv2.dilate(imagem, kernel, iterations=iterations)
 
