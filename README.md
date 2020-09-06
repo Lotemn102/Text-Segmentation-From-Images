@@ -13,11 +13,11 @@ For example:
 img = tis('example.png')
 
 # Crops words from text and saves them to 'cropped_words' directory.
-img.crop_text(output_dir='cropped_words', iterations=5, remove_lines=True)
+img.crop_text(output_dir='cropped_words', iterations=5)
 
 # Draws rectangles around all words in the text, and saves the result to
 # 'result_rec.png'.
-img.draw_rectangles(output_path='result_rec.png', iterations=5, remove_lines=True)
+img.draw_rectangles(output_path='result_rec.png', iterations=5)
 
 ```
 
