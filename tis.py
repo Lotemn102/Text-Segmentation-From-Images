@@ -107,7 +107,7 @@ class tis:
             im = img
         else:
             # Dilate image for better segmentation
-            im = dilate_img(img, iterations)
+            im = self.__dilate_img(img, iterations)
 
         # Check if image is already gray.
         try:
