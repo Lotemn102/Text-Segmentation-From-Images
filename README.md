@@ -30,7 +30,7 @@ The algorithm for finding the words in a text-based image is demonstrated in the
 
 
 ## Available Functions
-**draw_rectangles**(output_path=None, iterations=5, dilate=True)
+**draw_rectangles**(output_path, iterations=5, dilate=True)
 
 This function draws rectangles around the words in the text.
 With this function, you can see how ‘iterations’ variables affect the scripts’ segmentation performance. Can be convenient for long texts.
@@ -81,7 +81,7 @@ Result:
 ![4](https://user-images.githubusercontent.com/35609587/62475730-4cab5480-b7ae-11e9-8d35-b6ecae056a4c.png)
 
 
-**crop_text**(output_dir=None, iterations=5, dilate=True):
+**crop_text**(output_dir, iterations=5, dilate=True):
 
 This function crops the words from the text and saves them in separate png images.
 
